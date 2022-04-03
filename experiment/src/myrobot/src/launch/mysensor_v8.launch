@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<launch>
+  <!-- setting of gazebo -->
+  <arg name="position" default="gazebo" /> <!-- wheel or gazebo -->
+  <arg name="model" default="$(find fourth_robot_description)/robots/fourth_robot.urdf.xacro" />
+  <arg name="rvizconfig" default="$(find gazebo_sim)/src/myrobot/rviz/mysensor.rviz" />  
+  <param name="robot_description" command="$(find xacro)/xacro $(arg model) --inorder"/>
+
+  <!-- nodes -->
+  <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher" />
+
+<!-- 重複しているかもしれない-->
+  <!--<node name="robot_state_publisher" pkg="robot_state_publisher" type="state_publiser" /> -->
+
+  <!-- config launch about world -->
+
+  <include file="/home/miki/development_v1/src/camera/src/gazebo/launch/myrobotworld_v3.launch">
+  </include>
+  <include file="/home/miki/experiment/src/myrobot/src/control/myrobot_control.launch"> </include>
+
+  <node name="spawn_urdf" pkg="gazebo_ros" type="spawn_model" args="-param robot_description -urdf -model myrobot" />
+
+<!-- add script -->
+  <node name="urdf_spawner" pkg="gazebo_ros" type="spawn_model" respawn="false" output="screen"
+    args="-urdf -model myrobot -param robot_description"/>
+
+
+<!-- config about myrobot contoroling-->
+  <param name="/myrobot/diff_drive_controller/enable_odom_tf" value="true" />
+  <rosparam command="load"  file="/home/miki/gazebo_lib/src/gazebo_sim/src/myrobot/config/diff_drive_controller.yaml" ns="/myrobot"/>
+  <rosparam command="load"  file="$(find gazebo_sim)/src/myrobot/config/joint_state_controller.yaml" ns="/myrobot"/>
+  <node name="controller_spawner" pkg="controller_manager" type="spawner" respawn="false" output="screen" ns="/myrobot" 
+      args="diff_drive_controller joint_state_controller" />
+
+  <!-- cofig about display for rviz-->
+  <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" output="screen" ns="/myrobot"/>
+  <node name="rviz" pkg="rviz" type="rviz" args="-d $(arg rvizconfig)" required="true" />
+
+  <group if="$(eval position=='gazebo')">
+    <param name="myrobot/diff_drive_controller/enable_odom_tf" value="false" />
+    <node name="tf_pub" pkg="myrobot" type="tf_pub">
+      <param name="model_name" value="myrobot" />
+      <param name="base_frame" value="base_link" />
+      <param name="world_frame" value="odom" />
+    </node>
+  </group>
+
+
+
+</launch>

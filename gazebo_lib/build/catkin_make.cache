@@ -1,0 +1,2 @@
+gazebo_sim
+-DCATKIN_DEVEL_PREFIX=/home/miki/gazebo_lib/devel -DCMAKE_INSTALL_PREFIX=/home/miki/gazebo_lib/install -G Unix Makefiles

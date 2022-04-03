@@ -1,0 +1,148 @@
+#include <ros/ros.h>  // rosで必要はヘッダーファイル
+#include <time.h>
+#include <geometry_msgs/Twist.h> // ロボットを動かすために必要
+#include <nav_msgs/Odometry.h>
+#include <tf/transform_broadcaster.h>
+#include <tf/transform_datatypes.h>
+#include <gazebo_msgs/ModelStates.h> 
+#include <sensor_msgs/JointState.h>
+#include <std_msgs/Float64.h>
+#include <std_msgs/Float64MultiArray.h>
+
+using namespace std;
+
+
+struct d_pos{
+  double th;
+  double dt;
+  double dth;
+  double dx;
+  double dy;
+};
+
+struct d_pos d_pos = {-3.14, 0, 0, 0, 0} ;
+
+// コールバック関数。並進、回転速度の表示。
+void cbVel(const geometry_msgs::Twist::ConstPtr& vel) {
+    cout << "Linear :" << vel->linear.x << endl;
+    cout << "Angular:" << vel->angular.z << endl; 
+    time_t start;
+    time_t finish;
+    double t_s = vel -> linear.x;
+    double r_s = vel -> angular.z;
+    double l_t = 0;
+    double pi = 3.14;
+    std_msgs::Float64MultiArray msgs;
+    msgs.data.resize(3);
+    if (t_s != 0){
+      time(&start);
+      while(t_s != 0){
+        cout << "t_s :" << t_s << endl;
+      }
+      time(&finish);
+      l_t = finish - start;
+      d_pos.dt = t_s * l_t;
+      d_pos.dx = d_pos.dt * sin(d_pos.th/pi);
+      d_pos.dy = d_pos.dt * cos(d_pos.th/pi);
+
+      cout << "dx :" << d_pos.dx << endl;
+      sleep(5);
+    }
+    if (r_s != 0){
+      time(&start);
+      while(r_s != 0){
+        cout << "r_s :" << r_s << endl;
+      }
+      time(&finish);
+      l_t = finish - start;
+      d_pos.dth = r_s * l_t;
+      d_pos.th = d_pos.th + d_pos.dth;
+      cout << "dth :" << d_pos.dth << endl;
+    }
+
+    msgs.data[0] = d_pos.dx;
+    msgs.data[1] = d_pos.dy;
+    msgs.data[2] = d_pos.dth;  
+    
+    ros::NodeHandle pos;
+    ros::Publisher dpos = pos.advertise<std_msgs::Float64MultiArray>("msgs", 10);
+    dpos.publish(msgs);
+    cout << "msgs :" << msgs.data[0] << endl;
+    sleep(5);
+}
+
+// /odomトピックから位置posと姿勢poseを表示 
+void cbOdom(const nav_msgs::Odometry::ConstPtr& msg) { 
+    ROS_INFO("Seq: %d", msg->header.seq);
+    ROS_INFO("/odom Pos (x:%f, y:%f, z:%f)", msg->pose.pose.position.x,msg->pose.pose.position.y, msg->pose.pose.position.z);
+
+    tf::Quaternion q(msg->pose.pose.orientation.x, msg->pose.pose.orientation.y, msg->pose.pose.orientation.z, msg->pose.pose.orientation.w);  
+    // tf::Quaternion q(quat.x, quat.y, quat.z, quat.w);
+    tf::Matrix3x3 m(q);
+    double roll, pitch, yaw;
+    m.getRPY(roll, pitch, yaw);
+
+    ROS_INFO("/odom Pose (roll:%f, pitch:%f, yaw:%f) ", roll, pitch, yaw);
+    ROS_INFO("Vel (Linear:%f, Angular:%f)", msg->twist.twist.linear.x,msg->twist.twist.angular.z);
+                                          
+}
+
+// /gazebo/model_statesトピックから真の位置Pos(x,y,z)と姿勢Pose(roll, pitch ,yaw)を表示
+void cbModelStates(const gazebo_msgs::ModelStates::ConstPtr& msg)
+{
+  ROS_INFO("Real Pos (x:%f, y:%f, z:%f)", msg->pose[1].position.x,msg->pose[1].position.y, msg->pose[1].position.z);
+
+    tf::Quaternion q(msg->pose[1].orientation.x, msg->pose[1].orientation.y, msg->pose[1].orientation.z, msg->pose[1].orientation.w);  
+    // tf::Quaternion q(quat.x, quat.y, quat.z, quat.w);
+    tf::Matrix3x3 m(q);
+    double roll, pitch, yaw;
+    m.getRPY(roll, pitch, yaw);
+
+    ROS_INFO("Real Pose (roll:%f, pitch:%f, yaw:%f) ", roll, pitch, yaw);
+}
+
+// cbMyOdom：この関数に自分のオドメトリを実装しよう！
+// /joint_statesトピックから左右のjoint(車輪回転軸)の位置（回転角度)[rad]を表示
+// 参考：Turtlebot3の車輪直径0.066 [m]
+void cbMyOdom(const sensor_msgs::JointState::ConstPtr& jointstate)
+{
+
+    //double r_vel = jointstate->velocity[0]; // 右車軸の位置[rad]
+    //double l_vel  = jointstate->velocity[1]; // 左車軸の位置[rad]
+
+    double wheel_right_joint_pos = jointstate->position[0]; // 右車軸の位置[rad]
+    double wheel_left_joint_pos  = jointstate->position[1]; // 左車軸の位置[rad]
+
+    // 車軸の位置は積算される
+    ROS_INFO("Whell Pos (r:%f, l:%f)", wheel_right_joint_pos,wheel_left_joint_pos);
+}
+
+void setMyOdom()
+{
+  d_pos.dx = 0;
+  d_pos.dy = 0;
+  d_pos.dth = 0;
+}
+
+int main(int argc, char **argv)
+{
+    ros::init(argc, argv, "my_odom3");
+    ros::NodeHandle nh;
+
+    //subscriberの作成。トピック/cmd_velを購読する。
+    ros::Subscriber sub  = nh.subscribe("/cmd_vel", 10, cbVel);
+   // ros::Subscriber sub2 = nh.subscribe("/odom", 10, cbOdom);
+    //ros::Subscriber sub3 = nh.subscribe("/gazebo/model_states", 10, cbModelStates);
+   // ros::Subscriber sub4 = nh.subscribe("/joint_states", 100, cbMyOdom);
+    //ros::Subscriber sub5 = nh.subscribe("/joint_states", 100, setMyOdom);
+                
+                  
+    // コールバック関数を繰り返し呼び出す。
+    ros::Rate rate(100);
+
+    while (ros::ok()) {
+        ros::spinOnce();
+        rate.sleep();
+    }
+    return 0;
+}

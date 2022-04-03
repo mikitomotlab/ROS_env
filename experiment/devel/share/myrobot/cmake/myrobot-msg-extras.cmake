@@ -1,0 +1,2 @@
+set(myrobot_MESSAGE_FILES "/home/miki/experiment/src/myrobot/msg/dpos.msg")
+set(myrobot_SERVICE_FILES "/home/miki/experiment/src/myrobot/srv/SetVelocity.srv;/home/miki/experiment/src/myrobot/srv/SetVelocity2.srv;/home/miki/experiment/src/myrobot/srv/d_position.srv;/home/miki/experiment/src/myrobot/srv/SetVelocity.srv;/home/miki/experiment/src/myrobot/srv/SetVelocity2.srv;/home/miki/experiment/src/myrobot/srv/d_position.srv")

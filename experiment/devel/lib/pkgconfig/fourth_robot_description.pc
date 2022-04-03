@@ -1,0 +1,8 @@
+prefix=/home/miki/experiment/devel
+
+Name: fourth_robot_description
+Description: Description of fourth_robot_description
+Version: 2.0.0
+Cflags: 
+Libs: -L/home/miki/experiment/devel/lib -lfourth_robot_description
+Requires: 

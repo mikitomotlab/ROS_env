@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<launch>
+  <arg name="model" default="$(find gazebo_sim)/src/mybot_ws/src/mybot_description/urdf/mybot.xacro" />
+  <arg name="rvizconfig" default="$(find gazebo_sim)/src/myrobot/rviz/mysensor.rviz" />  
+  <param name="robot_description" command="$(find xacro)/xacro $(arg model) --inorder"/>
+
+  <include file="/home/miki/development_v1/src/camera/src/gazebo/launch/myrobotworld_v3.launch">
+  </include>
+
+  <node name="spawn_urdf" pkg="gazebo_ros" type="spawn_model" args="-param robot_description -urdf -model myrobot" />
+
+  <param name="/myrobot/diff_drive_controller/enable_odom_tf" value="true" />
+  <rosparam command="load"  file="/home/miki/gazebo_lib/src/gazebo_sim/src/myrobot/config/diff_drive_controller.yaml" ns="/myrobot"/>
+  <rosparam command="load"  file="$(find gazebo_sim)/src/myrobot/config/joint_state_controller.yaml" ns="/myrobot"/>
+  <node name="controller_spawner" pkg="controller_manager" type="spawner" respawn="false" output="screen" ns="/myrobot" 
+      args="diff_drive_controller joint_state_controller" />
+
+  <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" output="screen" ns="/myrobot"/>
+  <node name="rviz" pkg="rviz" type="rviz" args="-d $(arg rvizconfig)" required="true" />
+</launch>

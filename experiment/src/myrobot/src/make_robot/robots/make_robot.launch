@@ -1,0 +1,9 @@
+<launch>
+  <param name="robot_description" textfile="$(find myrobot)/src/make_robot/robots/make_robot4.urdf" />
+
+  <include file="$(find gazebo_ros)/launch/empty_world.launch" /><!--appear the empty_world-->
+
+  <node name="spawn_urdf" pkg="gazebo_ros" type="spawn_model" args="-param robot_description -urdf -model make_robot" /> 
+<!--create make_robot on gazebo, andreceive description from parameter server-->
+
+</launch>

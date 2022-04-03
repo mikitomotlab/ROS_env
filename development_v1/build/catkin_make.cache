@@ -1,0 +1,2 @@
+camera:image_pipeline/camera_calibration:image_pipeline/depth_image_proc:image_pipeline/image_pipeline:image_pipeline/image_proc:image_pipeline/image_publisher:image_pipeline/image_rotate:image_pipeline/image_view:image_pipeline/stereo_image_proc
+-DCATKIN_DEVEL_PREFIX=/home/miki/development_v1/devel -DCMAKE_INSTALL_PREFIX=/home/miki/development_v1/install -G Unix Makefiles

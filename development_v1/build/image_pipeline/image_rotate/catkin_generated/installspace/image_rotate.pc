@@ -1,0 +1,8 @@
+prefix=/home/miki/development_v1/install
+
+Name: image_rotate
+Description: Description of image_rotate
+Version: 1.12.23
+Cflags: -I/home/miki/development_v1/install/include
+Libs: -L/home/miki/development_v1/install/lib 
+Requires: 

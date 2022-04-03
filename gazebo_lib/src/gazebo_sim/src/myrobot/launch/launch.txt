@@ -1,0 +1,8 @@
+mysensor
+　ロボットを表示＋カメラ画像を取得
+ initial: mysimworld_v3.worldを使おうとするが表示できない
+ _v2: <arg>を削除したが表示できない
+ _v3: empty_world.launchを用いることでロボットも環境も表示することに成功
+
+myrobot
+

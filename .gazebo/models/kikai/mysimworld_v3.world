@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<sdf version="1.4">
+  <world name="kikai">
+    <static>true</static>
+    <model name="kikai">
+      <pose>0 0 0 0 0 0</pose>
+      <static>true</static>
+      <link name="body">
+        <collision name="collision">
+          <geometry>
+            <mesh>
+              <uri>.//model.sdf</uri>
+              <static>true</static>
+            </mesh>
+          </geometry>
+        </collision>
+        <visual name="visual">
+          <geometry>
+            <mesh>
+              <uri>.//model.sdf</uri>
+              <static>true</static>
+            </mesh>
+          </geometry>
+        </visual>
+      </link>
+    </model>
+  </world>
+</sdf>

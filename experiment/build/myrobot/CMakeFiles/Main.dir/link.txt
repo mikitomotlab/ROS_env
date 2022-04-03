@@ -1,0 +1,1 @@
+/usr/bin/c++      CMakeFiles/Main.dir/encoder.cpp.o  -o /home/miki/experiment/devel/lib/myrobot/Main -rdynamic 

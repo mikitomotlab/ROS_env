@@ -1,0 +1,2 @@
+myrobot:robot_text/src/test_pkg:turtlebot
+-DCATKIN_DEVEL_PREFIX=/home/miki/experiment/devel -DCMAKE_INSTALL_PREFIX=/home/miki/experiment/install -G Unix Makefiles

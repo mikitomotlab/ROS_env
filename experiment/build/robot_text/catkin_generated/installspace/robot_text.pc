@@ -1,0 +1,8 @@
+prefix=/home/miki/experiment/install
+
+Name: robot_text
+Description: Description of robot_text
+Version: 2.0.0
+Cflags: 
+Libs: -L/home/miki/experiment/install/lib -lrobot_text
+Requires: 

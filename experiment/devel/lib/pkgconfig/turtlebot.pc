@@ -1,0 +1,8 @@
+prefix=/home/miki/experiment/devel
+
+Name: turtlebot
+Description: Description of turtlebot
+Version: 0.0.0
+Cflags: 
+Libs: -L/home/miki/experiment/devel/lib 
+Requires: 

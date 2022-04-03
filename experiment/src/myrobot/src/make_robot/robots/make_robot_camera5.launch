@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<launch>
+  <!-- <param name="robot_description" textfile="$(find myrobot)/src/make_robot/robots/make_robot_camera.xacro" /> -->
+
+  <arg name="model" default="$(find myrobot)/src/make_robot/robots/make_robot8.xacro"/>
+  <arg name="rvizconfig" default="$(find gazebo_sim)/src/myrobot/rviz/mysensor.rviz" />  
+
+  <param name="robot_description" command="$(find xacro)/xacro $(arg model)" />
+
+  <include file="$(find gazebo_ros)/launch/empty_world.launch" /> 
+
+<!-- <include file="/home/miki/development_v1/src/camera/src/gazebo/launch/myrobotworld_v3.launch"> 
+</include> -->
+
+  <node name="spawn_urdf" pkg="gazebo_ros" type="spawn_model" args="-param robot_description -urdf -model make_robot" /> 
+<!--create make_robot on gazebo, andreceive description from parameter server-->
+
+
+  <node name="rviz" pkg="rviz" type="rviz" args="-d $(arg rvizconfig)" required="true" />
+
+</launch>

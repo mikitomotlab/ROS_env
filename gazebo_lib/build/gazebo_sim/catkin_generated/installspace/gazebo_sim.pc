@@ -1,0 +1,8 @@
+prefix=/home/miki/gazebo_lib/install
+
+Name: gazebo_sim
+Description: Description of gazebo_sim
+Version: 0.0.0
+Cflags: 
+Libs: -L/home/miki/gazebo_lib/install/lib 
+Requires: 

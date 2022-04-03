@@ -1,0 +1,8 @@
+prefix=/home/miki/experiment/install
+
+Name: myrobot2
+Description: Description of myrobot2
+Version: 0.0.0
+Cflags: 
+Libs: -L/home/miki/experiment/install/lib 
+Requires: 

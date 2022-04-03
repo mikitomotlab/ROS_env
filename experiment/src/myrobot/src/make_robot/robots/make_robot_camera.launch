@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<launch>
+  <!-- <param name="robot_description" textfile="$(find myrobot)/src/make_robot/robots/make_robot_camera.xacro" /> -->
+
+  <arg name="model" default="$(find myrobot)/src/make_robot/robots/make_robot6.xacro"/>
+
+  <param name="robot_description" command="$(find xacro)/xacro $(arg model)" />
+
+  <include file="$(find gazebo_ros)/launch/empty_world.launch" /><!--appear the empty_world-->
+
+  <node name="spawn_urdf" pkg="gazebo_ros" type="spawn_model" args="-param robot_description -urdf -model make_robot" /> 
+<!--create make_robot on gazebo, andreceive description from parameter server-->
+
+</launch>

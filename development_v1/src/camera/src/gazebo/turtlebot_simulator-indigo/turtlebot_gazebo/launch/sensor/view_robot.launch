@@ -1,0 +1,8 @@
+<!--
+  Used for visualising turtlebot in action.  
+  
+  It requires minimal.launch and optionally 3dsensor.launch to already be up and running.
+ -->
+<launch>
+  <node name="rviz" pkg="rviz" type="rviz" args="-d /home/miki/development_v1/src/camera/src/gazebo/turtlebot_simulator-indigo/turtlebot_gazebo/rviz/robot.rviz" />
+</launch>

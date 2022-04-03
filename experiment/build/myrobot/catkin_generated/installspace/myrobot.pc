@@ -1,0 +1,8 @@
+prefix=/home/miki/experiment/install
+
+Name: myrobot
+Description: Description of myrobot
+Version: 0.0.0
+Cflags: -I/home/miki/experiment/install/include
+Libs: -L/home/miki/experiment/install/lib -lmyrobot
+Requires: roscpp rospy tf message_runtime
